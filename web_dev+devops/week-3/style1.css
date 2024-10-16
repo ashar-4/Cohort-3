@@ -1,0 +1,11 @@
+.addTodoSection {
+    margin-top: 50px;
+}
+
+.todo-list {
+    display: flex;
+}
+
+.deleteButton {
+    margin: 20px 20px;
+}

@@ -1,0 +1,1 @@
+This is a repo to follow along with Harkirat's web_dev + devops course.

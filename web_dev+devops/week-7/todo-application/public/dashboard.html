@@ -1,0 +1,39 @@
+<html>
+
+    <head>
+        <title>Todo-User-Dashboard</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+        <script>
+            async function addTodo() {
+                await axios.post("http://localhost:3000/todo", {
+                    "title": document.getElementById("new-todo").value,
+                    "done": document.getElementById("done").value
+                }, {
+                    headers: {
+                        'authorization': localStorage.getItem("authorization")
+                    }
+                });
+                getAllTodos();
+            }
+
+            async function getAllTodos() {
+                const response = await axios.get("http://localhost:3000/todos", {
+                    headers: {
+                        'authorization': localStorage.getItem("authorization")
+                    }
+                });
+                document.getElementById("todos").innerHTML = response.data.todos;
+            }
+        </script>
+    </head>
+ 
+    <body>
+        <div id="add-todo">
+            <input id="new-todo" type="text" placeholder="Add-Todo">
+            <input id="done" type="checkbox" placeholder="Done">
+            <button onclick="addTodo()">Submit</button>
+        </div>
+        <div id="todos"></div>
+    </body>
+
+</html>

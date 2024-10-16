@@ -1,0 +1,93 @@
+<html>
+    <head>
+        <title>Todo</title>
+        <link rel="stylesheet" href="./style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+        <script>
+            async function signup() {
+                const email = document.getElementById("signup-email").value;
+                const name = document.getElementById("signup-name").value;
+                const password = document.getElementById("signup-password").value;
+
+                await axios.post("http://localhost:3000/signup", {
+                    "email": email,
+                    "name": name,
+                    "password": password,
+                })
+                alert("You are signed up!");
+            }
+
+            async function login() {
+                const response = await axios.post("http://localhost:3000/login", {
+                    "email": document.getElementById("login-email").value,
+                    "password": document.getElementById("login-password").value,
+                })
+                alert("Login successful!");
+                localStorage.setItem("Authorization", response.headers.authorization);
+                getAllTodos();
+            }
+
+            async function getAllTodos() {
+                const response = await axios.get("http://localhost:3000/todos", {
+                    headers: {
+                        'Authorization': localStorage.getItem("Authorization")
+                    }
+                });
+                createTodosContainer(response);
+            }
+
+            function createTodosContainer(response) {
+                const todosContainer = document.getElementById("todos");
+                let htmlContent = "";
+                for (const todo of response.data.todos) {
+                    const todoItem = document.createElement("div");
+                    const title = document.createElement("h3");
+
+                    title.textContent = todo.title;
+                    todoItem.appendChild(title);
+
+                    htmlContent += todoItem.outerHTML;
+                }
+                todosContainer.innerHTML = htmlContent;
+            }
+
+            async function addTodo() {
+                await axios.post("http://localhost:3000/todo", {
+                    "title": document.getElementById("new-todo").value,
+                    "done": false
+                }, {
+                    headers: {
+                        'Authorization': localStorage.getItem("Authorization")
+                    }
+                });
+                getAllTodos();
+            }
+
+        </script>
+    </head>
+
+    <body>
+
+        <div id="signup">
+            <input id="signup-email" type="email" placeholder="Email">
+            <input id="signup-name" type="text" placeholder="Name">
+            <input id="signup-password" type="password" placeholder="password">
+            <button onclick="signup()">Sign Up</button>
+        </div>
+
+        <div id="login">
+            <input id="login-email" type="email" placeholder="Email">
+            <input id="login-password" type="password" placeholder="password">
+            <button onclick="login()">Login</button>
+        </div>
+
+        <div id="add-todo">
+            <input id="new-todo" type="text" placeholder="Add-Todo">
+            <input id="done" type="checkbox" placeholder="Done">
+            <button onclick="addTodo()">Submit</button>
+        </div>
+        
+        <div id="todos"></div>
+
+    </body>
+</html>
