@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Todo</title>
-        <link rel="stylesheet" href="./style.css">
+        <!-- <link rel="stylesheet" href="./style.css"> -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
         <script>
             async function signup() {
@@ -9,12 +9,17 @@
                 const name = document.getElementById("signup-name").value;
                 const password = document.getElementById("signup-password").value;
 
-                await axios.post("http://localhost:3000/signup", {
+                const res = await axios.post("http://localhost:3000/signup", {
                     "email": email,
                     "name": name,
                     "password": password,
                 })
-                alert("You are signed up!");
+                if (!res.error) {
+                    alert("You are signed up!");
+                }
+                else {
+                    alert("Incorrect input");
+                }
             }
 
             async function login() {
